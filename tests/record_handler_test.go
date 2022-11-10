@@ -14,7 +14,6 @@ import (
 	"testing"
 )
 
-
 func TestRecordController(t *testing.T) {
 
 	expected := []byte(`{"code":0,"msg":"Success","records":[{"key":"KrZIErky","createdAt":"2016-08-15T01:12:05.989Z","totalCount":2993},{"key":"KrZIErky","createdAt":"2016-08-15T01:12:05.989Z","totalCount":2992},{"key":"bxoQiSKL","createdAt":"2016-01-29T01:59:53.494Z","totalCount":2991}]}`)
@@ -31,9 +30,8 @@ func TestRecordController(t *testing.T) {
 	mClient, err := GetMongoClient(t)
 	defer mClient.Disconnect(context.TODO())
 
-
 	recordRepository := repository.NewRecordsRepository(mClient)
-	recordService := services.NewRecordService(*recordRepository)
+	recordService := services.NewRecordService(recordRepository)
 	recordHandler := handler.NewRecordHandler(*recordService)
 
 	w := httptest.NewRecorder()

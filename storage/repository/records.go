@@ -4,9 +4,10 @@ import (
 	"case-api/model/record"
 	"case-api/pkg/config"
 	"context"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"time"
 )
 
 var ctx = context.TODO()
@@ -15,10 +16,9 @@ type RecordsRepository struct {
 	client *mongo.Client
 }
 
-type GetRecords interface {
+type Records interface {
 	Get(req record.Request) ([]record.Record, error)
 }
-
 
 func NewRecordsRepository(client *mongo.Client) *RecordsRepository {
 	return &RecordsRepository{

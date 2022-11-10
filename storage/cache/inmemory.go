@@ -24,7 +24,7 @@ func (s *InMemory) Set(key, value string) error {
 
 	if len(key) == 0 || len(value) == 0 {
 		err := errors.New("key or value can not be empty")
-		logger.Logger.Error(err)
+		logger.CustomError(err)
 		return err
 	}
 
@@ -40,7 +40,7 @@ func (s *InMemory) Get(key string) (string, error) {
 	err := errors.New("key is not found")
 	if len(key) == 0 {
 		err = errors.New("key can not be empty")
-		logger.Logger.Error(err)
+		logger.CustomError(err)
 		return "", err
 	}
 

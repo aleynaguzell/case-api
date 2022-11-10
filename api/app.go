@@ -6,6 +6,7 @@ import (
 	"case-api/pkg/logger"
 	"case-api/pkg/mongo"
 	"case-api/services"
+	"case-api/storage/cache"
 	"case-api/storage/repository"
 	"context"
 	"fmt"
@@ -49,19 +50,20 @@ func (a *app) Start() {
 	logger.Init()
 	log.Printf("logger is active")
 
-	setHttpClient()
-
+	memory := cache.New()
 	recordRepository := repository.NewRecordsRepository(mongoClient)
-	recordService := services.NewRecordService(*recordRepository)
+	recordService := services.NewRecordService(recordRepository)
 	recordHandler := handler.NewRecordHandler(*recordService)
 
-	memoryService := services.NewMemoryService()
+	memoryService := services.NewMemoryService(memory)
 	memoryHandler := handler.NewMemoryHandler(*memoryService)
 
 	http.HandleFunc("/", HealthCheck)
-	http.HandleFunc("/in-memory", memoryHandler.Set)
-	http.HandleFunc("/in-memory/", memoryHandler.Get)
+	http.HandleFunc("/in-memory/", memoryHandler.Set)
+	http.HandleFunc("/in-memory", memoryHandler.Get)
 	http.HandleFunc("/records", recordHandler.Get)
+
+	setHttpClient()
 }
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +90,7 @@ func setHttpClient() {
 
 	go func() {
 		if err := httpServer.ListenAndServe(); err != http.ErrServerClosed {
-			log.Fatal("HTTP server ListenAndServe: %v", err)
+			log.Printf("HTTP server ListenAndServe: %v", err)
 		}
 	}()
 

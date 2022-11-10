@@ -5,23 +5,25 @@ import (
 )
 
 type MemoryService struct {
+	db *cache.InMemory
 }
 
-func NewMemoryService() *MemoryService {
+func NewMemoryService(db *cache.InMemory) *MemoryService {
 	return &MemoryService{
+		db: db,
 	}
 }
 
 func (s *MemoryService) Set(key, value string) error {
-	err := cache.New().Set(key, value)
+	err := s.db.Set(key, value)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *MemoryService) Get(key string) (string,error) {
-	value, err := cache.New().Get(key)
+func (s *MemoryService) Get(key string) (string, error) {
+	value, err := s.db.Get(key)
 	if err != nil {
 		return "", err
 	}

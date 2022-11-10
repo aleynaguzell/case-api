@@ -30,13 +30,13 @@ func Setup(path string, env string) error {
 	viper.AddConfigPath(path)
 
 	if err := viper.ReadInConfig(); err != nil {
-		logger.Logger.Error("Error reading config file, %s", err)
+		logger.Error("Error reading config file, %s", err)
 		return err
 	}
 
 	err := viper.Unmarshal(&configuration)
 	if err != nil {
-		logger.Logger.Error("Unable to decode into struct, %v", err)
+		logger.Error("Unable to decode into struct, %v", err)
 		return err
 	}
 

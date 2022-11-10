@@ -1,42 +1,33 @@
 package logger
 
 import (
-	"fmt"
-	stdlog "log"
+	"os"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
-type ILogger interface {
-	Info(msg ...interface{})
-	Warn(msg ...interface{})
-	Error(msg ...interface{})
+var logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
+
+func Init() {
+	log.Logger = logger
 }
 
-type logger struct {
+func Error(msg string, err error) {
+	log.Logger.Error().Err(err).Msg(msg)
 }
 
-var Logger *logger
-
-// Init NewLogger creates a basic logger that wraps the core log library.
-func Init() ILogger {
-	Logger = &logger{}
-	return Logger
+func CustomError(err error) {
+	log.Logger.Error().Err(err)
 }
 
-// Info log message
-func (b *logger) Info(msg ...interface{}) {
-	stdlog.Printf("[INFO] %s", fmt.Sprint(msg...))
+func Info(msg string) {
+	log.Logger.Info().Msg(msg)
+}
+func Fatal(msg string, err error) {
+	log.Logger.Fatal().Err(err).Msg(msg)
 }
 
-// Warn log message
-func (b *logger) Warn(msg ...interface{}) {
-	stdlog.Printf("[WARN] %s", fmt.Sprint(msg...))
-}
-
-// Error log message
-func (b *logger) Error(msg ...interface{}) {
-	stdlog.Printf("[ERROR] %s", fmt.Sprint(msg...))
-}
-
-func (b *logger) Fatal(msg ...interface{}) {
-	stdlog.Printf("[FATAL] %s", fmt.Sprint(msg...))
+func Warn(msg string) {
+	log.Logger.Warn().Msg(msg)
 }

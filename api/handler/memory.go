@@ -16,10 +16,8 @@ var MemoryService services.MemoryService
 
 func NewMemoryHandler(memoryService services.MemoryService) *MemoryHandler {
 	MemoryService = memoryService
-	return &MemoryHandler{
-	}
+	return &MemoryHandler{}
 }
-
 
 //Set data to an in-memory database
 //HTTP.POST
@@ -32,7 +30,7 @@ func (m *MemoryHandler) Set(w http.ResponseWriter, r *http.Request) {
 			_, err := fmt.Fprintf(w, "%+v", err.Error())
 			if err != nil {
 				http.Error(w, "Request can not decoded", http.StatusBadRequest)
-				logger.Logger.Error("Request can not decoded", err)
+				logger.Error("Request can not decoded", err)
 				return
 			}
 		}
@@ -40,7 +38,7 @@ func (m *MemoryHandler) Set(w http.ResponseWriter, r *http.Request) {
 		err = MemoryService.Set(request.Key, request.Value)
 		if err != nil {
 			http.Error(w, "Can not set key/value pair", http.StatusInternalServerError)
-			logger.Logger.Error("Can not set key/value pair", err)
+			logger.Error("Can not set key/value pair", err)
 			return
 		}
 
@@ -49,7 +47,7 @@ func (m *MemoryHandler) Set(w http.ResponseWriter, r *http.Request) {
 		err = json.NewEncoder(w).Encode(&request)
 		if err != nil {
 			http.Error(w, "Request can not encoded", http.StatusBadRequest)
-			logger.Logger.Error("Request can not encoded", err)
+			logger.Error("Request can not encoded", err)
 			return
 		}
 
@@ -68,14 +66,14 @@ func (m *MemoryHandler) Get(w http.ResponseWriter, r *http.Request) {
 		value, err := MemoryService.Get(key)
 		if err != nil {
 			http.Error(w, "Can not get value", http.StatusInternalServerError)
-			logger.Logger.Error("Can not get value", err)
+			logger.Error("Can not get value", err)
 			return
 		} else {
 			out := inmemory.Request{Key: key, Value: value}
 			err = json.NewEncoder(w).Encode(out)
 			if err != nil {
 				http.Error(w, "Can not encode value", http.StatusInternalServerError)
-				logger.Logger.Error("Can not encode value", err)
+				logger.Error("Can not encode value", err)
 				return
 			}
 			w.WriteHeader(http.StatusOK)
