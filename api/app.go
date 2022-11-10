@@ -48,7 +48,7 @@ func (a *app) Start() {
 	}
 
 	logger.Init()
-	log.Printf("logger is active")
+	log.Printf("logger is active now")
 
 	memory := cache.New()
 	recordRepository := repository.NewRecordsRepository(mongoClient)
