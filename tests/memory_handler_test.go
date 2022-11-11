@@ -11,16 +11,11 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-//TODO: change with test mongo url
-const testMongoUrl = "mongodb+srv://challengeUser:WUMglwNBaydH8Yvu@challenge-xzwqd.mongodb.net/getircase-study?retryWrites=true"
 
 var memoryService = services.NewMemoryService(cache.New())
 var memoryHandler = handler.NewMemoryHandler(*memoryService)
+var ctx = context.Background()
 
 func TestInMemorySetController(t *testing.T) {
 
@@ -28,19 +23,6 @@ func TestInMemorySetController(t *testing.T) {
 	postBody := []byte(`{"key":  "active-tabs","value": "getir"}`)
 
 	req := httptest.NewRequest(http.MethodPost, "/in-memory/", bytes.NewBuffer(postBody))
-
-	ctx := context.Background()
-	mClient, err := mongo.Connect(ctx, options.Client().ApplyURI(testMongoUrl))
-	if err != nil {
-		t.Fail()
-	}
-
-	err = mClient.Ping(ctx, nil)
-	if err != nil {
-		t.Fail()
-	}
-
-	defer mClient.Disconnect(context.TODO())
 
 	w := httptest.NewRecorder()
 
@@ -69,19 +51,6 @@ func TestInMemoryGetController(t *testing.T) {
 
 	postBody := []byte(`{"key":  "active-tabs","value": "getir"}`)
 	reqPost := httptest.NewRequest(http.MethodPost, "/in-memory/", bytes.NewBuffer(postBody))
-
-	ctx := context.Background()
-	mClient, err := mongo.Connect(ctx, options.Client().ApplyURI(testMongoUrl))
-	if err != nil {
-		t.Fail()
-	}
-
-	err = mClient.Ping(ctx, nil)
-	if err != nil {
-		t.Fail()
-	}
-
-	defer mClient.Disconnect(context.TODO())
 
 	wp := httptest.NewRecorder()
 	setHandler := http.HandlerFunc(memoryHandler.Set)

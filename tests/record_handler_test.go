@@ -5,43 +5,27 @@ import (
 	"case-api/api/handler"
 	"case-api/services"
 	"case-api/storage/repository"
-	"context"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func TestRecordController(t *testing.T) {
 
-	expected := []byte(`{"code":0,"msg":"Success","records":[{"key":"KrZIErky","createdAt":"2016-08-15T01:12:05.989Z","totalCount":2993},{"key":"KrZIErky","createdAt":"2016-08-15T01:12:05.989Z","totalCount":2992},{"key":"bxoQiSKL","createdAt":"2016-01-29T01:59:53.494Z","totalCount":2991}]}`)
+	expected := []byte(`{"code":0,"msg":"Success","records":[{"key":"TAKwGc6Jr4i8Z487","createdAt":"2017-01-28T01:22:14.398Z","totalCount":0},{"key":"NAeQ8eX7e5TEg7oH","createdAt":"2017-01-27T08:19:14.135Z","totalCount":0}]}`)
 
 	postBody := []byte(`{
 		"startDate": "2016-01-26",
 		"endDate": "2018-02-02",
-		"minCount": 2990,
+		"minCount": 2700,
 		"maxCount": 3000
 	}`)
 
 	req := httptest.NewRequest(http.MethodPost, "/records", bytes.NewBuffer(postBody))
+	mClient, err := GetMongoClient(t)
 
-	ctx := context.Background()
-	mClient, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb+srv://challengeUser:WUMglwNBaydH8Yvu@challenge-xzwqd.mongodb.net/getircase-study?retryWrites=true"))
-	if err != nil {
-		t.Fail()
-	}
-
-	err = mClient.Ping(ctx, nil)
-	if err != nil {
-		t.Fail()
-	}
-
-	defer mClient.Disconnect(context.TODO())
 	recordRepository := repository.NewRecordsRepository(mClient)
 	recordService := services.NewRecordService(recordRepository)
 	recordHandler := handler.NewRecordHandler(*recordService)
@@ -55,7 +39,6 @@ func TestRecordController(t *testing.T) {
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println("err oluştu ", err)
 		t.Fatal(err)
 	}
 
