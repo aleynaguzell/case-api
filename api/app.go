@@ -2,6 +2,7 @@ package api
 
 import (
 	"case-api/api/handler"
+	_ "case-api/docs"
 	"case-api/pkg/config"
 	"case-api/pkg/logger"
 	"case-api/pkg/mongo"
@@ -10,6 +11,7 @@ import (
 	"case-api/storage/repository"
 	"context"
 	"fmt"
+	"github.com/swaggo/http-swagger"
 	"log"
 	"net/http"
 	"os"
@@ -58,6 +60,7 @@ func (a *app) Start() {
 	memoryService := services.NewMemoryService(memory)
 	memoryHandler := handler.NewMemoryHandler(*memoryService)
 
+	http.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 	http.HandleFunc("/", HealthCheck)
 	http.HandleFunc("/in-memory/", memoryHandler.Set)
 	http.HandleFunc("/in-memory", memoryHandler.Get)

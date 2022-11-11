@@ -20,6 +20,18 @@ func NewMemoryHandler(memoryService services.MemoryService) *MemoryHandler {
 	return &MemoryHandler{}
 }
 
+// Set func set data to an in-memory database.
+// @Description set data to an in-memory .
+// @Summary set data to an in-memory .
+// @Tags Memory
+// @Accept json
+// @Produce json
+// @Success      201  {string}  "ok"
+// @Failure      400  {string}  "error"
+// @Failure      404  {string}  "notfound"
+// @Failure      500  {string}  "error"
+// @Router /in-memory/ [post]
+// @Param inmemoryRequest body inmemory.Request true "InmemoryRequest"
 func (m *MemoryHandler) Set(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		var request inmemory.Request
@@ -56,6 +68,18 @@ func (m *MemoryHandler) Set(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Get func fetch data from an in-memory database.
+// @Description Get func fetch data from an in-memory database.
+// @Summary gets value of key
+// @Tags Memory
+// @Accept json
+// @Produce json
+// @Param        key query string true "Key"
+// @Success      200  {string}  string
+// @Failure      400  {string}  string  "error"
+// @Failure      404  {string}  string  "notfound"
+// @Failure      500  {string}  string  "error"
+// @Router       /in-memory [get]
 func (m *MemoryHandler) Get(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		keyQuery := r.URL.Query()

@@ -17,6 +17,18 @@ func NewRecordHandler(recordService services.RecordService) *RecordHandler {
 	return &RecordHandler{}
 }
 
+// Get func fetch data from records collection
+// @Description func fetch data from records collection.
+// @Summary func fetch data from records collection.
+// @Tags Record
+// @Accept json
+// @Produce json
+// @Success      200  {array}  record.Response
+// @Failure      400  {string}  string  "error"
+// @Failure      404  {string}  string  "notfound"
+// @Failure      500  {string}  string  "error"
+// @Router /records [post]
+// @Param recordRequest body record.Request true "RecordRequest"
 func (r *RecordHandler) Get(w http.ResponseWriter, request *http.Request) {
 
 	if request.Method == http.MethodPost {
