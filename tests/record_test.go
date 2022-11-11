@@ -4,21 +4,27 @@ import (
 	"case-api/model/record"
 	"case-api/storage/repository"
 	"context"
+	"testing"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"testing"
 )
 
 func TestGetRecord(t *testing.T) {
-	mClient, err := GetMongoClient(t)
-	defer mClient.Disconnect(context.TODO())
+	ctx := context.Background()
+	mClient, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb+srv://challengeUser:WUMglwNBaydH8Yvu@challenge-xzwqd.mongodb.net/getircase-study?retryWrites=true"))
 	if err != nil {
 		t.Fail()
 	}
-	ctx := context.Background()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(testMongoUrl))
 
-	repo := repository.NewRecordsRepository(client)
+	err = mClient.Ping(ctx, nil)
+	if err != nil {
+		t.Fail()
+	}
+
+	defer mClient.Disconnect(context.TODO())
+
+	repo := repository.NewRecordsRepository(mClient)
 
 	recordQuery := record.Request{
 		StartDate: "2016-01-26",

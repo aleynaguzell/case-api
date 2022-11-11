@@ -11,7 +11,13 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+//TODO: change with test mongo url
+const testMongoUrl = "mongodb+srv://challengeUser:WUMglwNBaydH8Yvu@challenge-xzwqd.mongodb.net/getircase-study?retryWrites=true"
 
 var memoryService = services.NewMemoryService(cache.New())
 var memoryHandler = handler.NewMemoryHandler(*memoryService)
@@ -23,7 +29,17 @@ func TestInMemorySetController(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/in-memory/", bytes.NewBuffer(postBody))
 
-	mClient, err := GetMongoClient(t)
+	ctx := context.Background()
+	mClient, err := mongo.Connect(ctx, options.Client().ApplyURI(testMongoUrl))
+	if err != nil {
+		t.Fail()
+	}
+
+	err = mClient.Ping(ctx, nil)
+	if err != nil {
+		t.Fail()
+	}
+
 	defer mClient.Disconnect(context.TODO())
 
 	w := httptest.NewRecorder()
@@ -32,12 +48,6 @@ func TestInMemorySetController(t *testing.T) {
 
 	handler.ServeHTTP(w, req)
 
-	// Check the status code is what we expect.
-	if status := w.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
-
 	res := w.Result()
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
@@ -45,8 +55,10 @@ func TestInMemorySetController(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if http.StatusCreated != res.StatusCode {
-		t.Error("expected ", http.StatusCreated, "got status", res.StatusCode)
+	// Check the status code is what we expect.
+	if status := w.Code; status != http.StatusCreated {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusCreated)
 	}
 	if !strings.Contains(string(body), string(expected)) {
 		t.Error("expected "+string(expected)+" got", string(body))
@@ -58,7 +70,17 @@ func TestInMemoryGetController(t *testing.T) {
 	postBody := []byte(`{"key":  "active-tabs","value": "getir"}`)
 	reqPost := httptest.NewRequest(http.MethodPost, "/in-memory/", bytes.NewBuffer(postBody))
 
-	mClient, err := GetMongoClient(t)
+	ctx := context.Background()
+	mClient, err := mongo.Connect(ctx, options.Client().ApplyURI(testMongoUrl))
+	if err != nil {
+		t.Fail()
+	}
+
+	err = mClient.Ping(ctx, nil)
+	if err != nil {
+		t.Fail()
+	}
+
 	defer mClient.Disconnect(context.TODO())
 
 	wp := httptest.NewRecorder()

@@ -12,6 +12,9 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func TestRecordController(t *testing.T) {
@@ -27,9 +30,18 @@ func TestRecordController(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/records", bytes.NewBuffer(postBody))
 
-	mClient, err := GetMongoClient(t)
-	defer mClient.Disconnect(context.TODO())
+	ctx := context.Background()
+	mClient, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb+srv://challengeUser:WUMglwNBaydH8Yvu@challenge-xzwqd.mongodb.net/getircase-study?retryWrites=true"))
+	if err != nil {
+		t.Fail()
+	}
 
+	err = mClient.Ping(ctx, nil)
+	if err != nil {
+		t.Fail()
+	}
+
+	defer mClient.Disconnect(context.TODO())
 	recordRepository := repository.NewRecordsRepository(mClient)
 	recordService := services.NewRecordService(recordRepository)
 	recordHandler := handler.NewRecordHandler(*recordService)
