@@ -7,9 +7,11 @@
 // Verify that you've installed Go
 $ go version
 
+version go 1.19
+
 // Clone the project
-$ git clone github.com/aleynaguzell/challange-api
-$ cd challange-api
+$ git clone github.com/aleynaguzell/case-api
+$ cd case-api
 
 // Run test
 $ go test -v ./tests -run Test
@@ -30,7 +32,7 @@ $ go run main.go
 EXAMPLE URL
 
 Prod:
-https://challange-api.herokuapp.com/
+https://case-api.herokuapp.com/
 
 Dev:
 http://localhost:8080/
@@ -59,7 +61,7 @@ GET
 ```
 EXAMPLE URL
 Prod:
-https://challange-api.herokuapp.com/in-memory?key=active-tabs
+https://case-api.herokuapp.com/in-memory?key=active-tabs
 
 Dev:
 http://localhost:8080/in-memory?key=active-tabs
@@ -106,7 +108,7 @@ Payload:
 EXAMPLE URL
 
 Prod:
-https://challange-api.herokuapp.com/in-memory/
+https://case-api.herokuapp.com/in-memory/
 
 Dev:
 http://localhost:8080/in-memory/
@@ -140,7 +142,7 @@ POST
 EXAMPLE URL
 
 Prod:
-https://challange-api.herokuapp.com/records
+https://case-api.herokuapp.com/records
 
 Dev:
 http://localhost:8080/records
