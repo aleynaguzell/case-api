@@ -3,9 +3,7 @@ package repository
 import (
 	"case-api/model/record"
 	"case-api/pkg/config"
-	"case-api/pkg/logger"
 	"context"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -33,24 +31,20 @@ func (r *RecordsRepository) Get(req record.Request) ([]record.Record, error) {
 
 	var results []record.Record
 
-	startDate, err := time.Parse("2006-01-02", req.StartDate)
-	if err != nil {
-		logger.Error("time parse error", err)
-		return nil, err
-	}
-
-	endDate, err := time.Parse("2006-01-02", req.EndDate)
-	if err != nil {
-		logger.Error("time parse error", err)
-		return nil, err
-	}
-
 	filter := []bson.M{
 		{
 			"$match": bson.M{
 				"createdAt": bson.M{
-					"$gt": startDate,
-					"$lt": endDate,
+					"$gt": req.StartDate,
+					"$lt": req.EndDate,
+				},
+			},
+		},
+		{
+			"$match": bson.M{
+				"totalCount": bson.M{
+					"$gt": req.MinCount,
+					"$lt": req.MaxCount,
 				},
 			},
 		},
@@ -60,14 +54,6 @@ func (r *RecordsRepository) Get(req record.Request) ([]record.Record, error) {
 				"key":        1,
 				"createdAt":  1,
 				"totalCount": bson.M{"$sum": "$counts"},
-			},
-		},
-		{
-			"$match": bson.M{
-				"totalCount": bson.M{
-					"$gt": req.MinCount,
-					"$lt": req.MaxCount,
-				},
 			},
 		},
 	}
