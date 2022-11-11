@@ -32,7 +32,7 @@ $ go run main.go
 EXAMPLE URL
 
 Prod:
-https://case-api.herokuapp.com/
+https://arcane-journey-94665.herokuapp.com/
 
 Dev:
 http://localhost:8080/
@@ -61,7 +61,7 @@ GET
 ```
 EXAMPLE URL
 Prod:
-https://case-api.herokuapp.com/in-memory?key=active-tabs
+https://arcane-journey-94665.herokuapp.com/in-memory?key=active-tabs
 
 Dev:
 http://localhost:8080/in-memory?key=active-tabs
@@ -108,7 +108,7 @@ Payload:
 EXAMPLE URL
 
 Prod:
-https://case-api.herokuapp.com/in-memory/
+https://arcane-journey-94665.herokuapp.com/in-memory/
 
 Dev:
 http://localhost:8080/in-memory/
@@ -142,7 +142,7 @@ POST
 EXAMPLE URL
 
 Prod:
-https://case-api.herokuapp.com/records
+https://arcane-journey-94665.herokuapp.com/records
 
 Dev:
 http://localhost:8080/records
