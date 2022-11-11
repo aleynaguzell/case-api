@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"case-api/model/errormessage"
 	"case-api/model/inmemory"
 	"case-api/pkg/logger"
 	"case-api/services"
@@ -19,8 +20,6 @@ func NewMemoryHandler(memoryService services.MemoryService) *MemoryHandler {
 	return &MemoryHandler{}
 }
 
-//Set data to an in-memory database
-//HTTP.POST
 func (m *MemoryHandler) Set(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		var request inmemory.Request
@@ -57,17 +56,24 @@ func (m *MemoryHandler) Set(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//Fetch data from an in-memory database
-//HTTP.GET
 func (m *MemoryHandler) Get(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		keyQuery := r.URL.Query()
 		key := keyQuery.Get("key")
 		value, err := MemoryService.Get(key)
 		if err != nil {
-			http.Error(w, "Can not get value", http.StatusInternalServerError)
-			logger.Error("Can not get value", err)
-			return
+			switch err.Error() {
+			case errormessage.KeyEmpty:
+				http.Error(w, errormessage.KeyEmpty, http.StatusInternalServerError)
+				return
+			case errormessage.KeyNotFound:
+				http.Error(w, errormessage.KeyNotFound, http.StatusNotFound)
+				return
+			default:
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				logger.CustomError(err)
+				return
+			}
 		} else {
 			out := inmemory.Request{Key: key, Value: value}
 			err = json.NewEncoder(w).Encode(out)

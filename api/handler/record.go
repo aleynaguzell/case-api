@@ -17,8 +17,6 @@ func NewRecordHandler(recordService services.RecordService) *RecordHandler {
 	return &RecordHandler{}
 }
 
-//Fetch data from records collection
-//HTTP.POST
 func (r *RecordHandler) Get(w http.ResponseWriter, request *http.Request) {
 
 	if request.Method == http.MethodPost {

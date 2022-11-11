@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"case-api/model/errormessage"
 	"case-api/pkg/logger"
 	"sync"
 
@@ -23,7 +24,7 @@ func New() *InMemory {
 func (s *InMemory) Set(key, value string) error {
 
 	if len(key) == 0 || len(value) == 0 {
-		err := errors.New("key or value can not be empty")
+		err := errors.New(errormessage.KeyOrValueEmpty)
 		logger.CustomError(err)
 		return err
 	}
@@ -37,9 +38,9 @@ func (s *InMemory) Set(key, value string) error {
 
 func (s *InMemory) Get(key string) (string, error) {
 
-	err := errors.New("key is not found")
+	err := errors.New(errormessage.KeyNotFound)
 	if len(key) == 0 {
-		err = errors.New("key can not be empty")
+		err = errors.New(errormessage.KeyEmpty)
 		logger.CustomError(err)
 		return "", err
 	}
