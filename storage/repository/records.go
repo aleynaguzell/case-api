@@ -3,6 +3,7 @@ package repository
 import (
 	"case-api/model/record"
 	"case-api/pkg/config"
+	"case-api/pkg/logger"
 	"context"
 	"time"
 
@@ -34,12 +35,13 @@ func (r *RecordsRepository) Get(req record.Request) ([]record.Record, error) {
 
 	startDate, err := time.Parse("2006-01-02", req.StartDate)
 	if err != nil {
+		logger.Error("time parse error", err)
 		return nil, err
 	}
 
 	endDate, err := time.Parse("2006-01-02", req.EndDate)
 	if err != nil {
-
+		logger.Error("time parse error", err)
 		return nil, err
 	}
 
@@ -74,9 +76,9 @@ func (r *RecordsRepository) Get(req record.Request) ([]record.Record, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer cursor.Close(context.TODO())
+	defer cursor.Close(ctx)
 
-	for cursor.Next(context.TODO()) {
+	for cursor.Next(ctx) {
 		var record record.Record
 		err := cursor.Decode(&record)
 		if err != nil {
