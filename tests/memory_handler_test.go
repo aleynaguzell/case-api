@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"case-api/api/handler"
 	"case-api/services"
+	"case-api/storage/cache"
 	"context"
 	"io/ioutil"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 	"testing"
 )
 
-var memoryService = services.NewMemoryService()
+var memoryService = services.NewMemoryService(cache.New())
 var memoryHandler = handler.NewMemoryHandler(*memoryService)
 
 func TestInMemorySetController(t *testing.T) {
