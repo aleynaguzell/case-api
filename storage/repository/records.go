@@ -53,7 +53,7 @@ func (r *RecordsRepository) Get(req record.Request) ([]record.Record, error) {
 				"_id":        0,
 				"key":        1,
 				"createdAt":  1,
-				"totalCount": bson.M{"$sum": "$counts"},
+				"totalCount": bson.M{"$sum": "$totalCount"},
 			},
 		},
 	}
