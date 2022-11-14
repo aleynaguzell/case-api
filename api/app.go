@@ -2,7 +2,6 @@ package api
 
 import (
 	"case-api/api/handler"
-	_ "case-api/docs"
 	"case-api/pkg/config"
 	"case-api/pkg/logger"
 	"case-api/pkg/mongo"
@@ -11,13 +10,14 @@ import (
 	"case-api/storage/repository"
 	"context"
 	"fmt"
-	"github.com/swaggo/http-swagger"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 const (
