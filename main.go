@@ -1,6 +1,9 @@
 package main
 
-import "case-api/api"
+import (
+	"case-api/api"
+	_ "case-api/docs"
+)
 
 //  @title           Swagger Case API
 // @version         1.0

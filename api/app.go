@@ -10,14 +10,13 @@ import (
 	"case-api/storage/repository"
 	"context"
 	"fmt"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-
-	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 const (
